@@ -1,9 +1,7 @@
 import json
 import requests
-import typing
 import os
 from typing import Dict, Any, List
-
 from models.summoner import Summoner
 
 API_KEY = os.getenv("RIOT_API_KEY")
@@ -14,9 +12,13 @@ get_match_url = "https://europe.api.riotgames.com/lol/match/v5/matches/"
 
 
 def get_summoner(summoner_name: str) -> Summoner:
-    url = f"{get_user_url}{summoner_name}?api_key={API_KEY}"
+    url = get_user_url + summoner_name + f"?api_key={API_KEY}"
+    print(f'Calling: {url}')
     response = requests.get(url).json()
-    summoner = Summoner(**response)
+    try:
+        summoner = Summoner(**response)
+    except TypeError:
+        print('something fucked up')
     return summoner
 
 
