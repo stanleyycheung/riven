@@ -18,4 +18,4 @@ class Summoner:
         self.summonerLevel = summonerLevel
 
     def __repr__(self) -> str:
-        return f'{self.name} @ {self.puuid}'
+        return f'{self.__class__.__name__} {self.name} @ {self.puuid}'
