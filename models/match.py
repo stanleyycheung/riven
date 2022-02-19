@@ -1,4 +1,5 @@
 from typing import Dict, List, Any
+from models.enums import GameType, GameMode
 
 
 class Match:
@@ -26,9 +27,8 @@ class MetadataDto:
 class InfoDto:
 
     def __init__(self, info: Dict[str, Any]):
-        # CUSTOM_GAME, MATCHED_GAME
-        self.gameMode = info['gameMode']
-        self.gameType = info['gameType']
+        self.gameMode: str = info['gameMode']
+        self.gameType: str = info['gameType']
 
         self.mapId = info['mapId']
 

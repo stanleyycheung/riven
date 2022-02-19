@@ -1,0 +1,10 @@
+GAMEMODE = {
+    "CLASSIC": "CLASSIC",
+    "ARAM": "ARAM",
+}
+
+GAMETYPE = {
+    "CUSTOM": "CUSTOM_GAME",
+    "TUTORIAL": "TUTORIAL_GAME",
+    "MATCHED": "MATCHED_GAME",
+}
