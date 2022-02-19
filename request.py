@@ -2,10 +2,11 @@ import requests
 import os
 from dotenv import load_dotenv
 from typing import Dict, Any, List
-
+import requests_cache
 from models.summoner import Summoner
 from models.match import Match
 from limiter import rate_limiter
+
 
 load_dotenv()
 API_KEY = os.getenv("RIOT_API_KEY")
@@ -14,13 +15,15 @@ GET_USER_URL = "https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name
 GET_USER_MATCHES_URL = "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/"
 GET_MATCH_URL = "https://europe.api.riotgames.com/lol/match/v5/matches/"
 
+# install cache
+requests_cache.install_cache('cache')
 
 class APIRequestException(Exception):
     """Error when making API call"""
 
 
 @rate_limiter
-def call_url(url):
+def call_url(url: str) -> dict:
     print(f'Calling: {url}')
     return requests.get(url)
 

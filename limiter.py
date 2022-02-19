@@ -1,14 +1,16 @@
 import datetime
 from time import sleep
+from typing import Callable
 
-def rate_limiter(func):
+def rate_limiter(func: Callable) -> Callable:
     call_times = []
     def wrapper(*args, **kwargs):
         nonlocal call_times
         num_calls = len(call_times)
         now_time = datetime.datetime.now()
-        # add to list to track when we called API
-        call_times.append(now_time)
+        if not call_times:
+            call_times.append(now_time)
+            return func(*args, **kwargs)
         # find when was the first API call 1 second and 2 min ago
         idx_two = None
         for idx, time in enumerate(call_times):
@@ -28,5 +30,9 @@ def rate_limiter(func):
             print('Calling too many calls within 2 mins (limit 100)')
             sleep(120)
         print(f'API called {num_calls} times')
-        return func(*args, **kwargs)
+        request = func(*args, **kwargs)
+        if not request.from_cache:
+            # add to list to track when we called API
+            call_times.append(now_time)
+        return request
     return wrapper
