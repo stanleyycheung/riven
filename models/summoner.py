@@ -1,7 +1,6 @@
 
 
 class Summoner:
-
     def __init__(self,
                  accountId: str,
                  profileIconId: str,
