@@ -24,7 +24,6 @@ class APIRequestException(Exception):
 
 @rate_limiter
 def call_url(url: str) -> dict:
-    print(f'Calling: {url}')
     return requests.get(url)
 
 

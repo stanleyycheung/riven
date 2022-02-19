@@ -34,6 +34,7 @@ def rate_limiter(func: Callable) -> Callable:
         if not request.from_cache:
             # add to list to track when we called API
             call_times.append(now_time)
+            print(f'Calling: {args[0]}')
             print(f'API called {num_calls} times')
         return request
     return wrapper
