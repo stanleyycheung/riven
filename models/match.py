@@ -1,5 +1,7 @@
 from typing import Dict, List, Any
 
+from models.summoner import Summoner
+
 
 class Match:
 
@@ -9,6 +11,15 @@ class Match:
 
     def __repr__(self) -> str:
         return f'{self.__class__.__name__} @ [{self.metadata}], [{self.info}]'
+
+    def participants(self) -> dict:
+        return self.info.participants
+
+    def get_participant_info(self, summoner: Summoner):
+        return self.info.participants[summoner.puuid]
+
+    def get_game_mode(self):
+        return self.info.gameMode
 
 
 class MetadataDto:
@@ -31,8 +42,8 @@ class InfoDto:
 
         self.mapId = info['mapId']
 
-        self.participants = [ParticipantDto(
-            participant) for participant in info['participants']]
+        self.participants = {participant['puuid'] :ParticipantDto(
+            participant) for participant in info['participants']}
         self.teams = [TeamDto(team) for team in info['teams']]
 
     def __repr__(self) -> str:

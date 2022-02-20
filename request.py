@@ -38,10 +38,17 @@ def get_summoner(summoner_name: str) -> Summoner:
     return summoner
 
 
-def get_recent_matches(summoner: Summoner, count: int = 20, start: int = 0) -> List[str]:
+def get_recent_matches(summoner: Summoner, number: int, start: int = 0) -> List[str]:
+    responses = []
+    count = min(100, number - start)
     url = f"{GET_USER_MATCHES_URL}{summoner.puuid}/ids?start={start}&count={count}&api_key={API_KEY}"
-    response = call_url(url)
-    return response.json()
+    responses.extend(call_url(url).json())
+    while number - (start + count) > 0:
+        start += count
+        count = min(100, number - start)
+        url = f"{GET_USER_MATCHES_URL}{summoner.puuid}/ids?start={start}&count={count}&api_key={API_KEY}"
+        responses.extend(call_url(url).json())
+    return responses
 
 
 def get_match(match_id: str) -> Match:
