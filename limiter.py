@@ -26,6 +26,8 @@ def rate_limiter(func: Callable) -> Callable:
             print('Calling too many calls within 1 second (limit 20)')
             # TODO: make a smart way to sleep not as long
             sleep(1)
+        # TODO: fix some bug here where idx_two is None (and add some logging) ]
+        # it only happens when hit 100 limit and then hits the 1min lmit
         calls_within_two_min = num_calls - idx_two
         if calls_within_two_min > 100:
             print('Calling too many calls within 2 mins (limit 100)')
