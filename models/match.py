@@ -31,8 +31,8 @@ class InfoDto:
 
         self.mapId = info['mapId']
 
-        self.participants = [ParticipantDto(
-            participant) for participant in info['participants']]
+        self.participants = {participant['puuid']: ParticipantDto(
+            participant) for participant in info['participants']}
         self.teams = [TeamDto(team) for team in info['teams']]
 
     def __repr__(self) -> str:
