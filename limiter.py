@@ -32,6 +32,7 @@ def rate_limiter(func: Callable) -> Callable:
         if calls_within_two_min > 100:
             print('Calling too many calls within 2 mins (limit 100)')
             sleep(120)
+            call_times.clear()
         request = func(*args, **kwargs)
         if not request.from_cache:
             # add to list to track when we called API
