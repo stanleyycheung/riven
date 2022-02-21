@@ -1,11 +1,18 @@
 import datetime
 from time import sleep
-from typing import Callable
+from typing import Callable, List
+
+CALLS_ONE_SEC_LIMIT = 20
+CALLS_TWO_MIN_LIMIT = 100
+
 
 def rate_limiter(func: Callable) -> Callable:
-    call_times = []
+    call_times: List[datetime.datetime] = []
+    total_call_count = 0
+
     def wrapper(*args, **kwargs):
         nonlocal call_times
+        nonlocal total_call_count
         num_calls = len(call_times)
         now_time = datetime.datetime.now()
         # deal with first request
@@ -13,31 +20,34 @@ def rate_limiter(func: Callable) -> Callable:
             call_times.append(now_time)
             return func(*args, **kwargs)
         # find when was the first API call 1 second and 2 min ago
-        idx_two = None
+        idx_one = 0
+        idx_two = 0
         for idx, time in enumerate(call_times):
-            if idx_two is None and time > now_time - datetime.timedelta(0, 120):
+            if now_time - time >= datetime.timedelta(0, 119):
                 idx_two = idx
-            elif time > now_time - datetime.timedelta(0, 1):
-                break
-            elif time < now_time - datetime.timedelta(0, 120):
-                call_times.pop(idx)
-        calls_within_one_sec = num_calls - idx
-        if calls_within_one_sec > 20:
-            print('Calling too many calls within 1 second (limit 20)')
-            # TODO: make a smart way to sleep not as long
-            sleep(1)
-        # TODO: fix some bug here where idx_two is None (and add some logging) ]
-        # it only happens when hit 100 limit and then hits the 1min lmit
+            elif now_time - time >= datetime.timedelta(0, 0.9):
+                idx_one = idx
+
         calls_within_two_min = num_calls - idx_two
-        if calls_within_two_min > 100:
-            print('Calling too many calls within 2 mins (limit 100)')
-            sleep(120)
-            call_times.clear()
+        if calls_within_two_min >= CALLS_TWO_MIN_LIMIT:
+            print(
+                f'Calling too many calls within 2 mins (limit {CALLS_TWO_MIN_LIMIT}), sleeping 120 sec')
+            sleep(121)
+            call_times = []
+        calls_within_one_sec = num_calls - idx_one
+        if calls_within_one_sec > CALLS_ONE_SEC_LIMIT:
+            print(
+                f'Calling too many calls within 1 sec (limit {CALLS_ONE_SEC_LIMIT}), sleeping 1 sec')
+            sleep(1)
+
         request = func(*args, **kwargs)
         if not request.from_cache:
+            total_call_count += 1
             # add to list to track when we called API
+            if len(call_times) == 100:
+                call_times = call_times[1:]
             call_times.append(now_time)
             print(f'Calling: {args[0]}')
-            print(f'API called {num_calls} times')
+            print(f'API called {total_call_count} times')
         return request
     return wrapper
