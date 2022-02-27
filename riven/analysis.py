@@ -1,7 +1,8 @@
 from collections import Counter
 from typing import List
-from models.match import Match
-from models.summoner import Summoner
+from consts import GAMEMODE
+from riven.models.match import Match
+from riven.models.summoner import Summoner
 import matplotlib.pyplot as plt
 import request
 
@@ -11,7 +12,7 @@ def get_aram_matches(summoner: Summoner, num_of_matches=500) -> List[Match]:
     matches = []
     for match_id in match_ids:
         match = request.get_match(match_id)
-        if match.get_game_mode() == 'ARAM':
+        if match.get_game_mode() == GAMEMODE['ARAM']:
             matches.append(match)
     return matches
 

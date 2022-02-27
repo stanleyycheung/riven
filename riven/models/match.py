@@ -1,6 +1,6 @@
 from typing import Dict, List, Any
 
-from models.summoner import Summoner
+from riven.models.summoner import Summoner
 
 
 class Match:

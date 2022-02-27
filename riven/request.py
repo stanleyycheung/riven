@@ -3,9 +3,9 @@ import os
 from dotenv import load_dotenv
 from typing import Dict, Any, List
 import requests_cache
-from models.summoner import Summoner
-from models.match import Match
-from limiter import rate_limiter
+from riven.models.summoner import Summoner
+from riven.models.match import Match
+from riven.limiter import rate_limiter
 
 
 load_dotenv()
