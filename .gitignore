@@ -133,3 +133,6 @@ test.py
 
 # caching
 *.sqlite
+
+# vscode
+.vscode
