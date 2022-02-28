@@ -1,3 +1,6 @@
+from riven.models.summoner import Summoner
+
+
 SUMMONER_MOCK_RESPONSE = {
     "id": "test_id",
     "accountId": "test_accountId",
@@ -7,3 +10,5 @@ SUMMONER_MOCK_RESPONSE = {
     "revisionDate": 0,
     "summonerLevel": 0
 }
+
+MOCK_SUMMONER = Summoner(**SUMMONER_MOCK_RESPONSE)
