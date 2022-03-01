@@ -8,4 +8,4 @@ Named after the legendary Koware's main champion
 
 Create a file called `.env` in the base directory and put your Riot API key in a variable `RIOT_API_KEY`.
 
-Install required python packages with `pip install -r requirements.txt`.
+Install `pipenv` package and do `pipenv install` to install all the dependencies
