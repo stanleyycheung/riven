@@ -11,9 +11,10 @@ matplotlib = "*"
 
 [dev-packages]
 pytest = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.10"
 
 [scripts]
-test = "pytest"
+test = "./tests/run_tests.sh"
