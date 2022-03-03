@@ -19,8 +19,9 @@ class TestLimiter:
         for i in range(100):
             mock_function(i)
 
-        start = 0
-        for i in range(1, len(called_times)):
-            if called_times[i] - called_times[start] >= datetime.timedelta(0, 1):
-                assert i - start - 1 <= 20
-                start = i
+        left, right = 0, 0
+        while right < len(called_times):
+            while right < len(called_times) and called_times[right] - called_times[left] <= datetime.timedelta(0, 1):
+                right += 1
+            assert right - 1 - left <= 20
+            left += 1
