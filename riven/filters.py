@@ -1,5 +1,4 @@
-from models.summoner import Summoner
-from models.match import Match
+from riven.models.match import Match
 
 
 def is_gameType(match: Match, gameType: str) -> bool:

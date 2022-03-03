@@ -1,6 +1,6 @@
 from typing import Dict, List, Any
 
-from models.summoner import Summoner
+from riven.models.summoner import Summoner
 
 
 class Match:
@@ -21,6 +21,9 @@ class Match:
     def get_game_mode(self):
         return self.info.gameMode
 
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, type(self)) and self.__dict__ == other.__dict__
+
 
 class MetadataDto:
 
@@ -33,6 +36,9 @@ class MetadataDto:
     def __repr__(self) -> str:
         return f'{self.__class__.__name__} @ {self.matchId}'
 
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, type(self)) and self.__dict__ == other.__dict__
+
 
 class InfoDto:
 
@@ -42,12 +48,15 @@ class InfoDto:
 
         self.mapId = info['mapId']
 
-        self.participants = {participant['puuid'] :ParticipantDto(
+        self.participants = {participant['puuid']: ParticipantDto(
             participant) for participant in info['participants']}
         self.teams = [TeamDto(team) for team in info['teams']]
 
     def __repr__(self) -> str:
         return f'{self.__class__.__name__} @ {self.gameMode}, {self.gameType}'
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, type(self)) and self.__dict__ == other.__dict__
 
 
 class ParticipantDto:
@@ -77,3 +86,6 @@ class TeamDto:
 
     def __repr__(self) -> str:
         return f'{self.__class__.__name__} @ {self.teamId}'
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, type(self)) and self.__dict__ == other.__dict__

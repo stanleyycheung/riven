@@ -3,9 +3,9 @@ import os
 from dotenv import load_dotenv
 from typing import Dict, Any, List
 import requests_cache
-from models.summoner import Summoner
-from models.match import Match
-from limiter import rate_limiter
+from riven.models.summoner import Summoner
+from riven.models.match import Match
+from riven.limiter import rate_limiter
 
 
 load_dotenv()
@@ -17,6 +17,7 @@ GET_MATCH_URL = "https://europe.api.riotgames.com/lol/match/v5/matches/"
 
 # install cache
 requests_cache.install_cache('cache')
+
 
 class APIRequestException(Exception):
     """Error when making API call"""
@@ -39,15 +40,17 @@ def get_summoner(summoner_name: str) -> Summoner:
 
 
 def get_recent_matches(summoner: Summoner, number: int, start: int = 0) -> List[str]:
+    current = start
     responses = []
-    count = min(100, number - start)
-    url = f"{GET_USER_MATCHES_URL}{summoner.puuid}/ids?start={start}&count={count}&api_key={API_KEY}"
-    responses.extend(call_url(url).json())
-    while number - (start + count) > 0:
-        start += count
-        count = min(100, number - start)
-        url = f"{GET_USER_MATCHES_URL}{summoner.puuid}/ids?start={start}&count={count}&api_key={API_KEY}"
-        responses.extend(call_url(url).json())
+    while current < start + number:
+        count = min(100, start+number-current)
+        url = f"{GET_USER_MATCHES_URL}{summoner.puuid}/ids?start={current}&count={count}&api_key={API_KEY}"
+        response = call_url(url).json()
+        if response:
+            responses.extend(response)
+        else:
+            break
+        current += count
     return responses
 
 
