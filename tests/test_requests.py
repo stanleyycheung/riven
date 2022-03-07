@@ -22,6 +22,20 @@ SUMMONER_MOCK_RESPONSE = {
 
 MOCK_SUMMONER = Summoner(**SUMMONER_MOCK_RESPONSE)
 
+match_limit = 1000
+
+
+def mock_matches(url):
+    print(url)
+    try:
+        start = int(re.search(r'start=(\d+)&', url).group(1))
+        count = int(re.search(r'count=(\d+)&', url).group(1))
+    except AttributeError as e:
+        raise Exception(f'Url called has no start and/or count: {url}') from e
+    mock_response = MagicMock()
+    mock_response.json.return_value = [i for i in range(start, start+count) if i < match_limit]
+    return mock_response
+
 
 class TestRequest:
 
@@ -53,21 +67,8 @@ class TestRequest:
         except APIRequestException as e:
             assert str(mock_response.status_code) in str(e)
 
-    @patch('riven.request.call_url')
-    def test_get_recent_matches(self, mock_call_url):
-
-        def mock_matches(url):
-            print(url)
-            try:
-                start = int(re.search(r'start=(\d+)&', url).group(1))
-                count = int(re.search(r'count=(\d+)&', url).group(1))
-            except AttributeError as e:
-                raise Exception(f'Url called has no start and/or count: {url}') from e
-            mock_response = MagicMock()
-            mock_response.json.return_value = [i for i in range(start, start+count) if i < match_limit]
-            return mock_response
-        match_limit = 1000
-        mock_call_url.side_effect = mock_matches
+    @patch('riven.request.call_url', mock_matches)
+    def test_get_recent_matches(self):
         recent_matches = get_recent_matches(MOCK_SUMMONER, 50)
         assert len(recent_matches) == 50
         recent_matches = get_recent_matches(MOCK_SUMMONER, 150, start=200)
