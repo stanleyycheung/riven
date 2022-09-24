@@ -1,13 +1,13 @@
 import datetime
 from time import sleep
-from typing import Callable, List
+from typing import Callable
 
 CALLS_ONE_SEC_LIMIT = 20
 CALLS_TWO_MIN_LIMIT = 100
 
 
 def rate_limiter(func: Callable) -> Callable:
-    call_times: List[datetime.datetime] = []
+    call_times: list[datetime.datetime] = []
     total_call_count = 0
 
     def wrapper(*args, **kwargs):

@@ -1,7 +1,6 @@
 import requests
 import os
 from dotenv import load_dotenv
-from typing import Dict, Any, List
 import requests_cache
 from riven.models.summoner import Summoner
 from riven.models.match import Match
@@ -39,7 +38,7 @@ def get_summoner(summoner_name: str) -> Summoner:
     return summoner
 
 
-def get_recent_matches(summoner: Summoner, number: int, start: int = 0) -> List[str]:
+def get_recent_matches(summoner: Summoner, number: int, start: int = 0) -> list[str]:
     current = start
     responses = []
     while current < start + number:
