@@ -1,9 +1,14 @@
 import datetime
 from time import sleep
 from typing import Callable
+import logging
 
 CALLS_ONE_SEC_LIMIT = 20
 CALLS_TWO_MIN_LIMIT = 100
+TIME_BUFFER = datetime.timedelta(0, 1)
+
+
+logger = logging.getLogger(__name__)
 
 
 def rate_limiter(func: Callable) -> Callable:
@@ -23,22 +28,23 @@ def rate_limiter(func: Callable) -> Callable:
         idx_one = 0
         idx_two = 0
         for idx, time in enumerate(call_times):
-            if now_time - time >= datetime.timedelta(0, 119):
+            if now_time - time >= datetime.timedelta(0, 129):
                 idx_two = idx
-            elif now_time - time >= datetime.timedelta(0, 0.9):
+                break
+            elif now_time - time >= datetime.timedelta(0, 1):
                 idx_one = idx
 
         calls_within_two_min = num_calls - idx_two
         if calls_within_two_min >= CALLS_TWO_MIN_LIMIT:
-            print(
-                f'Calling too many calls within 2 mins (limit {CALLS_TWO_MIN_LIMIT}), sleeping 120 sec')
-            sleep(121)
+            sleep_dur = call_times[idx_two+1] + datetime.timedelta(0, 120) - now_time + TIME_BUFFER
+            logging.info(f'Calling too many calls within 2 mins (limit {CALLS_TWO_MIN_LIMIT}), sleeping {sleep_dur}')
+            sleep(sleep_dur.seconds)
             call_times = []
         calls_within_one_sec = num_calls - idx_one
         if calls_within_one_sec > CALLS_ONE_SEC_LIMIT:
-            print(
-                f'Calling too many calls within 1 sec (limit {CALLS_ONE_SEC_LIMIT}), sleeping 1 sec')
-            sleep(1)
+            sleep_dur = call_times[idx_one+1] + datetime.timedelta(0, 1) - now_time + TIME_BUFFER
+            logging.info(f'Calling too many calls within 1 sec (limit {CALLS_ONE_SEC_LIMIT}), sleeping {sleep_dur}')
+            sleep(sleep_dur.seconds)
 
         request = func(*args, **kwargs)
         if not request.from_cache:
@@ -47,7 +53,7 @@ def rate_limiter(func: Callable) -> Callable:
             if len(call_times) == 100:
                 call_times = call_times[1:]
             call_times.append(now_time)
-            print(f'Calling: {args[0]}')
-            print(f'API called {total_call_count} times')
+            logging.info(f'Calling: {args[0]}')
+            logging.debug(f'API called {total_call_count} times')
         return request
     return wrapper

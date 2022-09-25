@@ -1,5 +1,5 @@
 from collections import Counter
-from consts import GAMEMODE
+from helpers.consts import GAMEMODE
 from riven.models.match import Match
 from riven.models.summoner import Summoner
 import matplotlib.pyplot as plt

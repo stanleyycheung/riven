@@ -4,7 +4,6 @@ import os
 import re
 from unittest.mock import MagicMock, patch
 
-from riven.models.match import InfoDto, MetadataDto
 from riven.models.summoner import Summoner
 from riven.request import APIRequestException, call_url, get_match, get_recent_matches, get_summoner
 
