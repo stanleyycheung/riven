@@ -4,7 +4,7 @@ Lightweight wrapper around Riot's API for League of Legends
 
 Named after the legendary Koware's main champion
 
-[![CI](https://github.com/stanleyycheung/riven/actions/workflows/ci.yml/badge.svg)](https://github.com/stanleyycheung/riven/actions/workflows/ci.yml)
+[![.github/workflows/ci.yml](https://github.com/stanleyycheung/riven/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/stanleyycheung/riven/actions/workflows/ci.yml)
 
 ## Setup
 
