@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "riven"
+version = "0.1.0"
+description = "Lightweight SDK for Riot API"
+authors = ["Stanley Cheung <stanleyycheung@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests-cache = "^0.9.7"
+python-dotenv = "^0.21.0"
+matplotlib = "*"
+autopep8 = "*"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.0"
+coverage = "^7.0.4"
+pylint = "^2.15.9"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

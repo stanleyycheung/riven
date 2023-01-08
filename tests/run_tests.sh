@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
-coverage run -m pytest
-retVal=$?
-if [ $retVal -ne 0 ]; then
-    exit $retVal
+coverage run -m pytest --verbose
+exitCode=$?
+if [ $exitCode -ne 0 ]; then
+    exit $exitCode
 fi
-coverage html -d tests/coverage_html
-coverage report -m --fail-under=90
+coverage report --omit="tests/*" --fail-under=90
+exitCode=$?
+if [ $exitCode -ne 0 ]; then
+    exit $exitCode
+fi
